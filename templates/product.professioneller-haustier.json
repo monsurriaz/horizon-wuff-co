@@ -729,7 +729,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_B1006BC8-BBEB-49C6-B465-E02CC6FB13D9 3_2f8131bf-9148-4410-8a88-0f084ce76cf6.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -840,7 +840,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_5CD4F81D-0B33-4DB4-A491-BE4124A4C2E8 3.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -951,7 +951,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_2F9C01B3-6FB6-4819-94CC-F7F016A2EC75 3_8af1ec79-9f24-4564-84a3-8497cf74dc2d.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1182,7 +1182,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Video4.MOV",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1239,7 +1239,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_EAE9E117-4671-454E-9BD7-706EE7C2FEA1_e6872a2e-8737-4dea-98ad-57f527eed415.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1296,7 +1296,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_2F9C01B3-6FB6-4819-94CC-F7F016A2EC75 3_8af1ec79-9f24-4564-84a3-8497cf74dc2d.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1354,7 +1354,7 @@
                   "disabled": true,
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/34f47c46e826490b9f2f13a73e7e446c.HD-1080p-2.5Mbps-55114747 (1).mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1713,7 +1713,7 @@
                   "disabled": true,
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_B1006BC8-BBEB-49C6-B465-E02CC6FB13D9 3_2f8131bf-9148-4410-8a88-0f084ce76cf6.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1849,7 +1849,7 @@
                   "disabled": true,
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_5CD4F81D-0B33-4DB4-A491-BE4124A4C2E8 3.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1985,7 +1985,7 @@
                   "disabled": true,
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_2F9C01B3-6FB6-4819-94CC-F7F016A2EC75 3_8af1ec79-9f24-4564-84a3-8497cf74dc2d.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,

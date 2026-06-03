@@ -680,7 +680,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_576A2700-3267-4F33-9B08-369AB7A5C501.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -791,7 +791,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_4B6D9727-C443-4619-B957-84388F9ACED3_bcb473c1-d348-4d94-a090-8a1d3bcb0638.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -902,7 +902,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_F3D613BB-82C6-469D-97F9-3A909C8479DF.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1133,7 +1133,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_576A2700-3267-4F33-9B08-369AB7A5C501.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1190,7 +1190,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_4B6D9727-C443-4619-B957-84388F9ACED3_bcb473c1-d348-4d94-a090-8a1d3bcb0638.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1247,7 +1247,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_F3D613BB-82C6-469D-97F9-3A909C8479DF.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,

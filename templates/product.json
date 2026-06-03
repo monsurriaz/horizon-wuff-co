@@ -638,7 +638,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Video3-groomer.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -749,7 +749,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_EAE9E117-4671-454E-9BD7-706EE7C2FEA1.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -860,7 +860,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/copy_39E91E03-E757-4448-8EF5-7270D2392B97_e713b7a8-25c9-4cc0-973b-25fde7eb6386.mov",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1092,7 +1092,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan2.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1149,7 +1149,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan3.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1206,7 +1206,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1263,7 +1263,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/34f47c46e826490b9f2f13a73e7e446c.HD-1080p-2.5Mbps-55114747 (1).mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,

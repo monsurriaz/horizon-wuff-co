@@ -638,7 +638,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan3.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -749,7 +749,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan2.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -860,7 +860,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1091,7 +1091,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan2.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1148,7 +1148,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan3.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1205,7 +1205,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/Ankan.mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,
@@ -1262,7 +1262,7 @@
                   "name": "t:names.video",
                   "settings": {
                     "source": "uploaded",
-                    "video": "shopify://files/videos/34f47c46e826490b9f2f13a73e7e446c.HD-1080p-2.5Mbps-55114747 (1).mp4",
+                    "video": "",
                     "video_url": "",
                     "video_autoplay": true,
                     "video_loop": true,

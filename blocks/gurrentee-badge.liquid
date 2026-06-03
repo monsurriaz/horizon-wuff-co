@@ -1,0 +1,112 @@
+<style>
+  .guarantee-badges-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: {{ block.settings.margin_top }}px;
+    margin-bottom: {{ block.settings.margin_bottom }}px;
+  }
+  .guarantee-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 0;
+  }
+  .guarantee-item .guarantee-icon {
+    width: 15px;
+    height: 15px;
+    color: #fda21e;
+  }
+  .guarantee-item .guarantee-text {
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+</style>
+
+<div class="guarantee-badges-container" {{ block.shopify_attributes }}>
+  <div class="guarantee-item">
+    <svg class="guarantee-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span class="guarantee-text">{{ block.settings.item_1 }}</span>
+  </div>
+
+  <div class="guarantee-item">
+    <svg class="guarantee-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+    </svg>
+    <span class="guarantee-text">{{ block.settings.item_2 }}</span>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Gurrentee Badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "item_1",
+      "label": "Item 1",
+      "default": "Vet Tested & Recommended"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Icon/Image 1"
+    },
+    {
+      "type": "liquid",
+      "id": "icon_1",
+      "label": "SVG",
+      "info": "Optional"
+    },
+    {
+      "type": "text",
+      "id": "item_2",
+      "label": "Item 2",
+      "default": "365 Day Money Back Guarantee"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Icon/Image 2"
+    },
+    {
+      "type": "liquid",
+      "id": "icon_2",
+      "label": "SVG",
+      "info": "Optional"
+    },
+    {
+      "type": "header",
+      "content": "Margin"
+    },
+    {
+      "type": "number",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "default": 0,
+      "info": "Accept negative values, unit in pixel"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "default": 0,
+      "info": "Accept negative values, unit in pixel"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gurrentee Badge"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,236 @@
+<style>
+  .fb-comment-container {
+    border-radius: 0px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 8px 0 0;
+    overflow: hidden;
+    line-height: 1.34;
+  }
+  .fb-comment-inner {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .fb-comment-profile {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .fb-comment-profile img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    object-position: center; 
+    display: block;
+  }
+  .fb-comment-content {
+    flex: 1;
+  }
+  .fb-comment-bubble {
+    background: #e8e8e8;
+    border-radius: 18px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    position: relative;
+  }
+  .fb-comment-author {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .fb-comment-text {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  .fb-comment-reactions {
+    position: absolute;
+    bottom: -10px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2px 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e4e6ea;
+  }
+  .fb-comment-reaction-icons {
+    display: flex; 
+    margin-right: 0px;
+  }
+  .fb-comment-reaction-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-left: -2px;
+    border: 1px solid white;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fb-comment-reaction-count {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+</style>
+<div class="fb-comment-container" {{ block.shopify_attributes }}>
+  <div class="fb-comment-inner">
+    <div class="fb-comment-profile">
+      <img src="https://cdn.shopify.com/s/files/1/0965/0061/3446/files/Captura_de_pantalla_2025-08-27_a_la_s_8.36.26_a._m..png?v=1769469327" alt="Profile picture" width="" height="">
+    </div>
+    <div class="fb-comment-content">
+      <div class="fb-comment-bubble">
+        <div class="fb-comment-author">
+          {{ block.settings.author }}
+        </div>
+        <div class="fb-comment-text">
+          {{ block.settings.comment }}
+        </div>
+
+        <div class="fb-comment-reactions">
+          <div class="fb-comment-reaction-icons">
+            <!-- Like Icon -->
+            <div class="fb-comment-reaction-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" style="display: block;">
+                <path fill="url(#fb-like-gradient-facebook_comment_bNpdpr)" d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Z"></path>
+                <path fill="#fff" d="M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725.1.163.132.36.089.546-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666ZM3.6 7h.8a.6.6 0 0 1 .6.6v3.8a.6.6 0 0 1-.6.6h-.8a.6.6 0 0 1-.6-.6V7.6a.6.6 0 0 1 .6-.6Z"></path>
+                <defs>
+                  <linearGradient id="fb-like-gradient-facebook_comment_bNpdpr" x1="8" x2="8" y2="16" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#18AFFF"></stop>
+                    <stop offset="1" stop-color="#0062DF"></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            
+            <!-- Love Icon -->
+            <div class="fb-comment-reaction-icon" style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              margin-left: -2px;
+              border: 1px solid white;
+              overflow: hidden;
+              flex-shrink: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" style="display: block;">
+                <path fill="url(#fb-love-gradient-facebook_comment_bNpdpr)" d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Z"></path>
+                <path fill="#fff" d="M10.473 4C8.275 4 8 5.824 8 5.824S7.726 4 5.528 4c-2.114 0-2.73 2.222-2.472 3.41C3.736 10.55 8 12.75 8 12.75s4.265-2.2 4.945-5.34c.257-1.188-.36-3.41-2.472-3.41Z"></path>
+                <defs>
+                  <linearGradient id="fb-love-gradient-facebook_comment_bNpdpr" x1="8" x2="8" y2="16" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#FF6680"></stop>
+                    <stop offset="1" stop-color="#E61739"></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            
+            <!-- Care Icon -->
+            <div class="fb-comment-reaction-icon" style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              margin-left: -2px;
+              border: 1px solid white;
+              overflow: hidden;
+              flex-shrink: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="display: block;">
+                <defs>
+                  <linearGradient id="fb-care-bg-facebook_comment_bNpdpr" x1="-2.313" x2="-2.313" y1="19.862" y2="20.738" gradientTransform="matrix(16 0 0 -16 45 333)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#f28a2d"></stop>
+                    <stop offset="1" stop-color="#fde86f"></stop>
+                  </linearGradient>
+                  <linearGradient id="fb-care-mouth-facebook_comment_bNpdpr" x1="-1.619" x2="-1.619" y1="18.2" y2="16.681" gradientTransform="matrix(3.4035 0 0 -.9374 13.51 22.37)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#482314"></stop>
+                    <stop offset="1" stop-color="#9a4111"></stop>
+                  </linearGradient>
+                  <radialGradient id="fb-care-eye1-facebook_comment_bNpdpr" cx="-3.9" cy="18.924" r=".872" gradientTransform="matrix(0 -2.1326 -2.1327 0 45.352 -4.046)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#3b446b"></stop>
+                    <stop offset=".688" stop-color="#202340"></stop>
+                  </radialGradient>
+                  <radialGradient id="fb-care-eye2-facebook_comment_bNpdpr" cx="-3.914" cy="18.924" r=".872" gradientTransform="matrix(0 -2.1326 -2.1327 0 51.366 -4.077)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#3b446b"></stop>
+                    <stop offset=".688" stop-color="#202340"></stop>
+                  </radialGradient>
+                  <linearGradient id="fb-care-heart-facebook_comment_bNpdpr" x1="-2.17" x2="-2.407" y1="20.358" y2="19.647" gradientTransform="matrix(9.7496 0 0 -9.079 27.91 194.578)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#f34462"></stop>
+                    <stop offset="1" stop-color="#cc0820"></stop>
+                  </linearGradient>
+                </defs>
+                <path fill="url(#fb-care-bg-facebook_comment_bNpdpr)" fill-rule="evenodd" d="M16 8c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8 8 3.6 8 8z" clip-rule="evenodd"></path>
+                <path fill="url(#fb-care-mouth-facebook_comment_bNpdpr)" fill-rule="evenodd" d="M9.7 5.9c-.1-.3-3.3-.3-3.4 0-.1.3.6.7 1.7.7s1.8-.4 1.7-.7z" clip-rule="evenodd"></path>
+                <path fill="url(#fb-care-eye1-facebook_comment_bNpdpr)" fill-rule="evenodd" d="M6 4.1c0 .7-.4.9-1 1-.6.1-1.1-.2-1.1-1 0-.6.3-1.4 1.1-1.4.7 0 1 .8 1 1.4z" clip-rule="evenodd"></path>
+                <path fill="url(#fb-care-eye2-facebook_comment_bNpdpr)" fill-rule="evenodd" d="M10 4.1c0 .7.4.9 1.1 1 .6.1 1.1-.2 1.1-1 0-.6-.3-1.4-1.1-1.4S10 3.5 10 4.1z" clip-rule="evenodd"></path>
+                <path fill="url(#fb-care-heart-facebook_comment_bNpdpr)" fill-rule="evenodd" d="M9.7 8.5c-2.1-.6-2.8.8-2.8.8S7.1 7.7 5 7c-2-.6-3.2 1.3-3.3 2.4-.2 2.5 2 5.3 2.8 6.3.1.3.4.3.7.3 1.2-.3 4.6-1.4 5.9-3.6.5-1.1.6-3.3-1.4-3.9z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </div>
+          <span class="fb-comment-reaction-count">59</span>
+        </div>
+      </div>
+      
+      <div class="fb-comment-meta" style="
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-left: 12px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #65676b;
+      ">
+        <span class="fb-comment-meta-item" style="
+          cursor: pointer;
+          font-weight: 600;
+        ">Like</span>
+        <span class="fb-comment-meta-item" style="
+          cursor: pointer;
+          font-weight: 600;
+        ">Reply</span>
+        <span class="fb-comment-timestamp">4d</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Fb Comment",
+    "tag": null,
+    "settings": [
+      {
+        "type": "text",
+        "id": "author",
+        "label": "Author",
+        "default": "Elizabeth Denth"
+      },
+      {
+        "type": "textarea",
+        "id": "comment",
+        "label": "Comment",
+        "default": "I used to always forget his water, he's now drinking way more than ever. He's more active, and overall happier."
+      }
+    ],
+    "presets": [
+      {
+        "name": "Fb Comment",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

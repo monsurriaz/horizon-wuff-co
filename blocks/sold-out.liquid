@@ -1,0 +1,75 @@
+<style>
+  .sold-out__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #FFF2DD;
+    border-radius: 8px;
+    font-family: inherit;
+    text-align: center;
+    font-size: 14px;
+    gap: 8px;
+  }
+  .sold-out__text {
+    font-size: 14px;
+  }
+  .sold-out__wrapper img {
+    width: 16px;
+  }
+</style>
+
+<div class="sold-out__wrapper" 
+  style="margin-top: {{ block.settings.margin_top }};margin-bottom: {{ block.settings.margin_bottom }}px;" 
+  {{ block.shopify_attributes }}
+>
+  <img src="https://cdn.shopify.com/s/files/1/0965/0061/3446/files/de.svg?v=1769469919" alt="German Flag" width="16" height="15" style="display:block;">
+  <span class="sold-out__text">
+    {{ block.settings.text }}
+  </span>
+</div>
+
+{% schema %}
+  {
+    "name": "Sold out warning",
+    "tag": null,
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "flat",
+        "label": "Flag Icon"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "text",
+        "label": "Sold out text",
+        "default": "Fast ausverkauft - Versand morgen"
+      },
+      {
+        "type": "header",
+        "content": "Margin"
+      },
+      {
+        "type": "number",
+        "id": "margin_top",
+        "label": "Margin Top",
+        "default": 0,
+        "info": "Accept negative values, unit in pixel"
+      },
+      {
+        "type": "number",
+        "id": "margin_bottom",
+        "label": "Margin Bottom",
+        "default": 0,
+        "info": "Accept negative values, unit in pixel"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Sold out warning",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

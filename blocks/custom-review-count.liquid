@@ -1,0 +1,72 @@
+<div class="custom-rating" role="img" aria-label="4.9 von 5 Sternen" style="padding-top: {{ block.settings.margin_top }}px;padding-bottom: {{ block.settings.margin_bottom }}px;">
+  {% if block.settings.icon != blank %}
+    {{ block.settings.icon }}
+  {% else %}
+    <svg width="67" height="13" viewBox="0 0 67 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.5 10.4479L10.517 13L9.45425 8.19L13 4.95711L8.3265 4.53289L6.5 0L4.6735 4.53289L0 4.95711L3.54575 8.19L2.483 13L6.5 10.4479Z" fill="#FDA21E"></path>
+      <path d="M20 10.4479L24.017 13L22.9542 8.19L26.5 4.95711L21.8265 4.53289L20 0L18.1735 4.53289L13.5 4.95711L17.0457 8.19L15.983 13L20 10.4479Z" fill="#FDA21E"></path>
+      <path d="M33.5 10.4479L37.517 13L36.4542 8.19L40 4.95711L35.3265 4.53289L33.5 0L31.6735 4.53289L27 4.95711L30.5457 8.19L29.483 13L33.5 10.4479Z" fill="#FDA21E"></path>
+      <path d="M47 10.4479L51.017 13L49.9542 8.19L53.5 4.95711L48.8265 4.53289L47 0L45.1735 4.53289L40.5 4.95711L44.0457 8.19L42.983 13L47 10.4479Z" fill="#FDA21E"></path>
+      <path d="M60.5 10.4479L64.517 13L63.4542 8.19L67 4.95711L62.3265 4.53289L60.5 0L58.6735 4.53289L54 4.95711L57.5457 8.19L56.483 13L60.5 10.4479Z" fill="#FDA21E"></path>
+    </svg>
+  {% endif %}
+  {% assign min = 2 %}
+  {% assign max = 50 %}
+  {% assign diff = max | minus: min %}
+  {% assign seed = "now" | date: "%N" %}
+  {% assign random_number = seed | modulo: diff | plus: min %}
+  <span class="rating-count caption">
+    <span aria-hidden="true">{{ block.settings.review_amount | default: random_number }} {{ block.settings.review_text }} </span>
+  </span>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Review Count",
+  "tag": null,
+  "settings": [
+    {
+      "type": "number",
+      "id": "review_amount",
+      "label": "Review Count",
+      "default": 50
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "label": "Text",
+      "default": "Bewertungen"
+    },
+    {
+      "type": "liquid",
+      "id": "icon",
+      "label": "SVG",
+      "info": "Optional"
+    },
+    {
+      "type": "header",
+      "content": "Margin"
+    },
+    {
+      "type": "number",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "default": 0,
+      "info": "Accept negative values, unit in pixel"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "default": 0,
+      "info": "Accept negative values, unit in pixel"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Review Count",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

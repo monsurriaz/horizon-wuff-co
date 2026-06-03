@@ -1,0 +1,49 @@
+{% liquid
+  assign product = closest.product
+%}
+
+<div class="custom-rating">
+  <svg width="67" height="13" viewBox="0 0 67 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6.5 10.4479L10.517 13L9.45425 8.19L13 4.95711L8.3265 4.53289L6.5 0L4.6735 4.53289L0 4.95711L3.54575 8.19L2.483 13L6.5 10.4479Z" fill="#FDA21E"></path>
+    <path d="M20 10.4479L24.017 13L22.9542 8.19L26.5 4.95711L21.8265 4.53289L20 0L18.1735 4.53289L13.5 4.95711L17.0457 8.19L15.983 13L20 10.4479Z" fill="#FDA21E"></path>
+    <path d="M33.5 10.4479L37.517 13L36.4542 8.19L40 4.95711L35.3265 4.53289L33.5 0L31.6735 4.53289L27 4.95711L30.5457 8.19L29.483 13L33.5 10.4479Z" fill="#FDA21E"></path>
+    <path d="M47 10.4479L51.017 13L49.9542 8.19L53.5 4.95711L48.8265 4.53289L47 0L45.1735 4.53289L40.5 4.95711L44.0457 8.19L42.983 13L47 10.4479Z" fill="#FDA21E"></path>
+    <path d="M60.5 10.4479L64.517 13L63.4542 8.19L67 4.95711L62.3265 4.53289L60.5 0L58.6735 4.53289L54 4.95711L57.5457 8.19L56.483 13L60.5 10.4479Z" fill="#FDA21E"></path>
+  </svg>
+
+  {% assign min = block.settings.min_rating %}
+  {% assign max = block.settings.max_rating %}
+  {% assign diff = max | minus: min %}
+  {% assign seed = "now" | date: "%N" %}
+  {% assign random_number = seed | modulo: diff | plus: min %}
+  <span class="rating-count caption">
+    <span aria-hidden="true">{{ product.metafield.custom.rating_counts | default: random_number }} Bewertungen</span>
+  </span>
+</div>
+
+{% schema %}
+{
+  "name": "Card Review Stars",
+  "tag": null,
+  "settings": [
+    {
+      "type": "number",
+      "id": "min_rating",
+      "label": "Min Rating count",
+      "default": 2
+    },
+    {
+      "type": "number",
+      "id": "max_rating",
+      "label": "Max Rating count",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Card Review Stars",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

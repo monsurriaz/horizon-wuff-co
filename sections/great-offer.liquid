@@ -1,0 +1,1075 @@
+{%- comment -%}
+  SOP: Great Offer Bundle section
+  =================================
+
+  Purpose
+  -------
+  This section shows tiered bundle cards, opens a scent-selection modal, lets the
+  customer choose the exact quantity of bottles included in the selected tier,
+  and adds the selected variants to cart in one request.
+
+  Files required when moving this feature to another Shopify theme
+  ----------------------------------------------------------------
+  1. Copy this file to:
+     sections/great-offer.liquid
+  2. Copy the JavaScript file to:
+     assets/great-offer.js
+  3. Keep this script include near the bottom of this section:
+     <script src="{{ 'great-offer.js' | asset_url }}" defer></script>
+  4. Add the section from the Shopify theme editor, or reference it from a JSON
+     template with:
+     "type": "great-offer"
+
+  Product and variant setup requirements
+  --------------------------------------
+  - Each offer card uses a "Scent products" product list.
+  - Every selected product must have a variant option value that matches the
+    block setting "Size option value". Example: if the block says "50ml", the
+    product variant option must also be "50ml".
+  - The first product in the product list is used to display the card price for
+    that size.
+  - The modal will only show products that have a matching size variant.
+  - Product images or variant images are used as scent thumbnails.
+
+  Section/block setup in the theme editor
+  ---------------------------------------
+  - Section settings control the eyebrow, title, and subtitle.
+  - "Tier Card" blocks are standard offer cards.
+  - "Best Value Tier" is the highlighted offer card and is limited to one block.
+  - For each block, set:
+    products, size_label, size_option_value, qty_included, deal_tag_text,
+    per_ml_label, per_ml_value, and button text.
+  - The "qty_included" number is the exact quantity customers must choose before
+    the Add to cart button becomes active.
+
+  Theme compatibility notes
+  -------------------------
+  - This section uses Shopify's /cart/add.js endpoint through
+    window.Shopify.routes.cart_add_url when available.
+  - After adding items, the script dispatches the Horizon cart update event:
+    cart:update
+  - Themes that do not listen for cart:update will still add products to cart,
+    but the cart drawer/page may not refresh automatically. In that case, update
+    dispatchCartAddEvent() in assets/great-offer.js to match the target theme's
+    cart refresh event, or redirect to /cart after a successful add.
+  - The script looks for cart-items-component[data-section-id] to request cart
+    sections for refresh. If the target theme uses different cart section
+    markup, adjust the sectionIds logic in assets/great-offer.js.
+
+  QA checklist after installing in another theme
+  ---------------------------------------------
+  - Add the section to a product/template page.
+  - Select products for every tier card.
+  - Confirm each tier's Size option value exactly matches real variant options.
+  - Click each Choose button and confirm the modal opens with the right scents.
+  - Confirm unavailable variants cannot be selected.
+  - Select fewer than qty_included and confirm Add to cart stays disabled.
+  - Select exactly qty_included and confirm the chosen variants add to cart.
+  - Confirm the cart drawer/page refreshes correctly in the target theme.
+  - Test on desktop and mobile widths.
+{%- endcomment -%}
+
+<section class="great-offer-section">
+  <div class="go-inner">
+    <div class="go-header">
+      <div class="go-eyebrow">{{ section.settings.eyebrow_text }}</div>
+      <h2 class="go-title">{{ section.settings.title }}</h2>
+      <p class="go-subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <div class="go-cards">
+      {%- for block in section.blocks -%}
+        {%- assign block_products = block.settings.products -%}
+        {%- assign size_option_value = block.settings.size_option_value -%}
+        {%- assign qty = block.settings.qty_included -%}
+        {%- assign is_featured = false -%}
+        {%- if block.type == 'featured_offer_card' -%}
+          {%- assign is_featured = true -%}
+        {%- endif -%}
+
+        {%- assign price_product = block_products | first -%}
+
+        {%- if price_product -%}
+          {%- comment -%} Find the variant matching this size {%- endcomment -%}
+          {%- assign size_variant = nil -%}
+          {%- for variant in price_product.variants -%}
+            {%- if variant.option1 == size_option_value or variant.option2 == size_option_value or variant.option3 == size_option_value -%}
+              {%- assign size_variant = variant -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if size_variant -%}
+            {%- comment -%} Build scents array: block products × their size variant {%- endcomment -%}
+            {%- assign scents_json_parts = '' -%}
+            {%- for prod in block_products -%}
+              {%- for var in prod.variants -%}
+                {%- if var.option1 == size_option_value
+                     or var.option2 == size_option_value
+                     or var.option3 == size_option_value -%}
+                  {%- unless scents_json_parts == '' -%}
+                    {%- assign scents_json_parts = scents_json_parts | append: ',' -%}
+                  {%- endunless -%}
+                  {%- capture scent_obj -%}
+                    {"id":{{ var.id }},"title":{{ prod.title | json }},"available":{{ var.available }},"image":"{{ var.featured_image | default: prod.featured_image | image_url: width: 100 }}"}
+                  {%- endcapture -%}
+                  {%- assign scents_json_parts = scents_json_parts | append: scent_obj -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+
+            {%- assign scents_json = '[' | append: scents_json_parts | append: ']' -%}
+
+            <div
+              class="go-card{% if is_featured %} go-card--best{% endif %}"
+              data-scents='{{ scents_json }}'
+              data-qty="{{ qty }}"
+              data-size-label="{{ block.settings.size_label }}"
+              data-block-id="{{ block.id }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if is_featured -%}
+                <div class="go-best-label">
+                  <span class="go-best-text-desktop">{{ block.settings.best_value_text }}</span>
+                  <span class="go-best-text-mobile">{{ block.settings.best_value_text_mobile }}</span>
+                </div>
+              {%- endif -%}
+
+              <div class="go-size-badge">{{ block.settings.size_label }}</div>
+              <div class="go-price">{{ size_variant.price | money }}</div>
+              <div class="go-deal-tag{% if is_featured %} go-deal-tag--big{% endif %}">
+                {{ block.settings.deal_tag_text }}
+              </div>
+
+              <div class="go-divider"></div>
+
+              <div class="go-stat-row">
+                <span>Bottles included</span>
+                <span>× {{ qty }}</span>
+              </div>
+
+              <div class="go-ppm-row">
+                <span class="go-ppm-label">{{ block.settings.per_ml_label }}</span>
+                <span class="go-ppm-value{% if is_featured %} go-ppm-value--best{% endif %}">
+                  {{ block.settings.per_ml_value }}
+                </span>
+              </div>
+
+              {%- if is_featured and block.settings.saving_text != blank -%}
+                <div class="go-saving">{{ block.settings.saving_text }}</div>
+              {%- endif -%}
+
+              <button
+                class="go-btn{% if is_featured %} go-btn--best{% endif %}"
+                type="button"
+                data-action="go-start-flow"
+              >
+                <span class="go-btn-text">{{ block.settings.btn_text }}</span>
+                <span class="go-btn-mobile-text">{{ block.settings.btn_text_mobile }}</span>
+              </button>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- Modal -->
+    <div class="go-modal" id="go-modal">
+      <div class="go-modal-box">
+        <button class="go-modal-close" type="button" id="go-modal-close">✕</button>
+        <h3 id="go-modal-title">Choose your bottles</h3>
+        <p id="go-modal-subtitle" class="go-modal-sub"></p>
+
+        <!-- Progress Bar -->
+        <div class="go-progress-wrap">
+          <div class="go-progress-label">
+            <span>Bottles chosen</span>
+            <span><strong id="go-progress-n">0</strong> / <strong id="go-progress-total">2</strong></span>
+          </div>
+          <div class="go-progress-bar-bg">
+            <div class="go-progress-bar-fill" id="go-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="go-scent-grid" id="go-scent-grid"></div>
+        <div class="go-modal-footer">
+          <span id="go-selection-count" class="go-sel-count">0 of 2 selected</span>
+          <button class="go-confirm-btn" id="go-confirm-btn" type="button" disabled>
+            Add to cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .great-offer-section * { box-sizing: border-box; margin: 0; padding: 0; }
+  .great-offer-section {
+    --go-gold: #c9a84c;
+    --go-gold-light: #e8d499;
+    --go-dark: #1a1a1a;
+    --go-cream: #faf7f2;
+    --go-radius: 18px;
+    background: var(--go-cream);
+    padding: 70px 24px 80px;
+  }
+
+  .go-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .go-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .go-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--go-gold);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .go-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    color: var(--go-dark);
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+
+  .go-subtitle {
+    font-size: 16px;
+    color: #888;
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .go-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: center;
+  }
+
+  .go-card {
+    background: #fff;
+    border-radius: var(--go-radius);
+    border: 2px solid #e8e0d5;
+    padding: 34px 26px 30px;
+    text-align: center;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.25s;
+    position: relative;
+  }
+
+  .go-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .go-card--best {
+    background: var(--go-dark);
+    border: 2px solid var(--go-gold);
+    color: #fff;
+    padding-top: 44px;
+    transform: scale(1.04);
+    box-shadow: 0 20px 60px rgba(201, 168, 76, 0.22),
+      0 4px 16px rgba(0, 0, 0, 0.18);
+    z-index: 2;
+  }
+
+  .go-card--best:hover {
+    transform: scale(1.04) translateY(-6px);
+    box-shadow: 0 28px 72px rgba(201, 168, 76, 0.28),
+      0 4px 20px rgba(0, 0, 0, 0.22);
+  }
+
+  .go-best-label {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--go-gold), #e8c96a);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 18px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(201, 168, 76, 0.4);
+  }
+  .go-best-text-mobile {
+    display: none;
+  }
+  .go-best-text-desktop {
+    display: inline-block;
+  }
+
+  .go-size-badge {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--go-gold);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .go-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: inherit;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .go-card:not(.go-card--best) .go-price {
+    color: var(--go-dark);
+  }
+
+  .go-deal-tag {
+    display: inline-block;
+    background: #f5f0e8;
+    color: #9a8060;
+    font-size: 13px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .go-deal-tag--big {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--go-gold);
+    font-weight: 700;
+    font-size: 14px;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+  }
+
+  .go-divider {
+    height: 1px;
+    background: #f0ebe3;
+    margin: 14px 0;
+  }
+
+  .go-card--best .go-divider {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .go-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 4px 0;
+    color: #999;
+  }
+
+  .go-card--best .go-stat-row {
+    color: #aaa;
+  }
+
+  .go-stat-row span:last-child {
+    font-weight: 600;
+    color: #555;
+  }
+
+  .go-card--best .go-stat-row span:last-child {
+    color: #e0d8c8;
+  }
+
+  .go-ppm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+  }
+
+  .go-ppm-label {
+    font-size: 13px;
+    color: #999;
+  }
+
+  .go-card--best .go-ppm-label {
+    color: #aaa;
+  }
+
+  .go-ppm-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #555;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .go-ppm-value--best {
+    font-size: 24px;
+    color: var(--go-gold);
+  }
+
+  .go-saving {
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: var(--go-gold);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 6px 10px;
+    background: rgba(201, 168, 76, 0.1);
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+
+  .go-btn {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    background: var(--go-dark);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 18px;
+  }
+
+  .go-btn:hover {
+    background: #333;
+    transform: translateY(-1px);
+  }
+
+  .go-btn--best {
+    background: linear-gradient(135deg, var(--go-gold), #ddb93e);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(201, 168, 76, 0.35);
+  }
+
+  .go-btn--best:hover {
+    background: linear-gradient(135deg, #b8963e, #c9a84c);
+  }
+
+  .go-btn .go-btn-mobile-text {
+    display: none;
+  }
+
+  .go-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 8, 5, 0.72);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .go-modal.active {
+    display: flex;
+  }
+
+  .go-modal-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px;
+    max-width: 540px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.3);
+  }
+
+  .go-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: #f5f0e8;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    padding: 0;
+  }
+
+  .go-modal-close:hover {
+    background: #e8e0d5;
+  }
+
+  .go-modal-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+    margin-top: 0;
+  }
+
+  .go-modal-sub {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 22px;
+    margin-top: 0;
+  }
+
+  .go-progress-wrap {
+    margin-bottom: 22px;
+  }
+
+  .go-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 8px;
+  }
+
+  .go-progress-label strong {
+    color: var(--go-dark);
+    font-weight: 700;
+  }
+
+  .go-progress-bar-bg {
+    height: 6px;
+    background: #f0ebe3;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .go-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--go-gold), #ddb93e);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .go-scent-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .go-scent-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: border-color 0.15s, background 0.15s;
+    background: none;
+  }
+
+  .go-scent-item.has-qty {
+    border-color: var(--go-gold);
+    background: #fdf9f0;
+  }
+
+  .go-scent-item--unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .go-scent-image {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: center;
+    flex-shrink: 0;
+    border: 2px solid #f0ebe3;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .go-scent-item.has-qty .go-scent-image {
+    border-color: var(--go-gold);
+    box-shadow: 0 4px 12px rgba(201, 168, 76, 0.2);
+  }
+
+  .go-scent-info {
+    flex: 1;
+  }
+
+  .go-scent-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .go-scent-variant {
+    font-size: 12px;
+    color: #bbb;
+  }
+
+  .go-stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1.5px solid #e0d8c8;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .go-stepper-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: #f5f0e8;
+    color: #666;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .go-stepper-btn:hover:not(:disabled) {
+    background: var(--go-gold);
+    color: #fff;
+  }
+
+  .go-stepper-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .go-stepper-val {
+    width: 34px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--go-dark);
+    background: #fff;
+    border-left: 1.5px solid #e0d8c8;
+    border-right: 1.5px solid #e0d8c8;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .go-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .go-sel-count {
+    font-size: 13px;
+    color: #aaa;
+  }
+
+  .go-confirm-btn {
+    background: linear-gradient(135deg, var(--go-gold), #ddb93e);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 28px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    transition: opacity 0.2s, transform 0.1s;
+    box-shadow: 0 4px 16px rgba(201, 168, 76, 0.3);
+  }
+
+  .go-confirm-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .go-confirm-btn:not(:disabled):hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .go-atc-error {
+    color: #d32f2f;
+    font-size: 13px;
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: rgba(211, 47, 47, 0.08);
+    border-radius: 6px;
+    border-left: 3px solid #d32f2f;
+  }
+
+  @media (max-width: 720px) {
+    .great-offer-section {
+      padding-inline: 20px;
+    }
+    .great-offer-section .go-cards {
+      gap: 10px;
+    }
+    .go-card {
+      border-radius: 13px;
+      padding: 8px 8px 12px;
+    }
+    .go-card--best {
+      /* transform: none; */
+    }
+    .go-card--best:hover {
+      transform: translateY(-6px);
+    }
+
+    .go-size-badge {
+      font-size: 10px;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .go-price {
+      font-size: 20px;
+    }
+    .go-deal-tag {
+      font-size: 8px;
+      padding: 3px 5px;
+      border-radius: 20px;
+      margin-bottom: 5px;
+    }
+    .go-divider {
+      margin: 7px 0;
+    }
+    .go-stat-row {
+      font-size: 8px;
+      padding: 4px 0;
+    }
+    .go-stat-row span {
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .go-ppm-row {
+      margin-top: 5px;
+    }
+    .go-ppm-label {
+      font-size: 11px;
+    }
+    .go-ppm-value {
+      font-size: 15px;
+    }
+    .go-btn {
+      width: 100%;
+      padding: 10px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      letter-spacing: .2px;
+      margin-top: 12px;
+    }
+    .go-btn .go-btn-mobile-text {
+      display: inline-block;
+    }
+    .go-btn .go-btn-text {
+      display: none;
+    }
+    .go-best-label {
+      top: -15px;
+      font-size: 8px;
+      letter-spacing: 1px;
+      padding: 3px 6px;
+    }
+    .go-best-text-desktop {
+      display: none;
+    }
+    .go-best-text-mobile {
+      display: inline-block;
+    }
+    .go-saving {
+      display: none;
+      margin-top: 6px;
+      font-size: 9px;
+      letter-spacing: .3px;
+      padding: 6px 6px;
+      margin-bottom: 0px;
+    }
+    .go-modal-box {
+      padding: 30px 25px 35px;
+    }
+    .go-scent-item {
+      gap: 10px;
+      padding: 14px 12px;
+    }
+    .go-scent-name {font-size: 12px; line-height: 1.4;}
+    .go-stepper-btn {
+      width: 26px;
+      height: 30px;
+      font-size: 16px;
+    }
+    .go-stepper-val {
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+    }
+  }
+{% endstylesheet %}
+
+<script src="{{ 'great-offer.js' |  asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Great Offer Bundle",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "Limited Launch Promotion"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The Great Offer"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Buy our bestselling perfumes and receive extra bottles completely free. Choose your size below."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer_card",
+      "name": "Tier Card",
+      "settings": [
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Scent products",
+          "limit": 12
+        },
+        {
+          "type": "text",
+          "id": "size_label",
+          "label": "Size label (e.g., '20 ml')",
+          "default": "20 ml"
+        },
+        {
+          "type": "text",
+          "id": "size_option_value",
+          "label": "Size option value (must match variant option)",
+          "default": "20ml"
+        },
+        {
+          "type": "number",
+          "id": "qty_included",
+          "label": "Quantity of bottles to select",
+          "default": 2
+        },
+        {
+          "type": "text",
+          "id": "deal_tag_text",
+          "label": "Deal tag text",
+          "default": "Buy 1 Get 1 Free"
+        },
+        {
+          "type": "text",
+          "id": "per_ml_label",
+          "label": "Per ml label",
+          "default": "Per ml"
+        },
+        {
+          "type": "text",
+          "id": "per_ml_value",
+          "label": "Per ml value (e.g., '£0.35')",
+          "default": "£0.35"
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Button text",
+          "default": "Choose your 2 →"
+        },
+        {
+          "type": "text",
+          "id": "btn_text_mobile",
+          "label": "Button text - (mobile)",
+          "default": "Choose 2 →"
+        }
+      ]
+    },
+    {
+      "type": "featured_offer_card",
+      "name": "Best Value Tier",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Scent products",
+          "limit": 12
+        },
+        {
+          "type": "text",
+          "id": "size_label",
+          "label": "Size label (e.g., '50 ml')",
+          "default": "50 ml"
+        },
+        {
+          "type": "text",
+          "id": "size_option_value",
+          "label": "Size option value (must match variant option)",
+          "default": "50ml"
+        },
+        {
+          "type": "number",
+          "id": "qty_included",
+          "label": "Quantity of bottles to select",
+          "default": 3
+        },
+        {
+          "type": "text",
+          "id": "best_value_text",
+          "label": "Best value text",
+          "default": "⭐ Best Value by Far"
+        },
+        {
+          "type": "text",
+          "id": "best_value_text_mobile",
+          "label": "Best value text - (mobile)",
+          "default": "⭐ Best Value"
+        },
+        {
+          "type": "text",
+          "id": "deal_tag_text",
+          "label": "Deal tag text",
+          "default": "Buy 1 Get 2 Free"
+        },
+        {
+          "type": "text",
+          "id": "per_ml_label",
+          "label": "Per ml label",
+          "default": "Per ml"
+        },
+        {
+          "type": "text",
+          "id": "per_ml_value",
+          "label": "Per ml value (e.g., '£0.15')",
+          "default": "£0.15"
+        },
+        {
+          "type": "textarea",
+          "id": "saving_text",
+          "label": "Savings text (optional, e.g., '57% cheaper per ml than 20ml option')",
+          "default": "57% cheaper per ml than 20ml option"
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Button text",
+          "default": "Choose your 3 →"
+        },
+        {
+          "type": "text",
+          "id": "btn_text_mobile",
+          "label": "Button text - (mobile)",
+          "default": "Choose 3 →"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Great Offer Bundle",
+      "settings": {
+        "eyebrow_text": "Limited Launch Promotion",
+        "title": "The Great Offer",
+        "subtitle": "Buy our bestselling perfumes and receive extra bottles completely free. Choose your size below."
+      },
+      "blocks": [
+        {
+          "type": "offer_card",
+          "settings": {
+            "products": [
+              "bcb-perfume-n47",
+              "bcb-perfume-n53",
+              "bcb-perfume-n68",
+              "bcb-perfume-n82"
+            ],
+            "size_label": "20 ml",
+            "size_option_value": "20ml",
+            "qty_included": 2,
+            "deal_tag_text": "Buy 1 Get 1 Free",
+            "per_ml_label": "Per ml",
+            "per_ml_value": "£0.35",
+            "btn_text": "Choose your 2 →",
+            "btn_text_mobile": "Choose 2 →"
+          }
+        },
+        {
+          "type": "offer_card",
+          "settings": {
+            "products": [
+              "bcb-perfume-n47",
+              "bcb-perfume-n53",
+              "bcb-perfume-n68",
+              "bcb-perfume-n82"
+            ],
+            "size_label": "30 ml",
+            "size_option_value": "30ml",
+            "qty_included": 2,
+            "deal_tag_text": "Buy 1 Get 1 Free",
+            "per_ml_label": "Per ml",
+            "per_ml_value": "£0.32",
+            "btn_text": "Choose your 2 →",
+            "btn_text_mobile": "Choose 2 →"
+          }
+        },
+        {
+          "type": "featured_offer_card",
+          "settings": {
+            "products": [
+              "bcb-perfume-n47",
+              "bcb-perfume-n53",
+              "bcb-perfume-n68",
+              "bcb-perfume-n82"
+            ],
+            "size_label": "50 ml",
+            "size_option_value": "50ml",
+            "qty_included": 3,
+            "best_value_text": "⭐ Best Value by Far",
+            "best_value_text_mobile": "⭐ Best Value",
+            "deal_tag_text": "Buy 1 Get 2 Free",
+            "per_ml_label": "Per ml",
+            "per_ml_value": "£0.15",
+            "saving_text": "57% cheaper per ml than 20ml option",
+            "btn_text": "Choose your 3 →",
+            "btn_text_mobile": "Choose 3 →"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
